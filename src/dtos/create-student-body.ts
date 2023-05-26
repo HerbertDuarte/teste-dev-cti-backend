@@ -1,5 +1,4 @@
-import { IsNotEmpty, Length } from "class-validator"
-
+import { IsNotEmpty } from "class-validator"
 
 export class CreateStudentBody {
 
@@ -11,8 +10,5 @@ export class CreateStudentBody {
 
   @IsNotEmpty()
   date : Date;
-
-  // @IsNotEmpty()
-  // score : JSON |any;
 
 }
