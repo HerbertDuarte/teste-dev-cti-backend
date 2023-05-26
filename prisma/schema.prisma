@@ -14,3 +14,10 @@ model studentsModel {
   date  DateTime
   score Json
 }
+
+model usersModel {
+  id          String @id @unique
+  displayName String
+  user        String
+  password    String
+}

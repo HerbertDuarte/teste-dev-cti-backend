@@ -15,23 +15,32 @@ export class StudentsController {
   return students
  }
 
- @Post('create')
-  async createStudent(@Body() body : CreateStudentBody)
-  {
-    console.log(body)
-   const { name, cpf, date} = body
+ @Get('list/:id')
+ async listSingleStudent(@Param('id') id: any){
 
- 
-   await this.prisma.studentsModel.create({
- 
-     data : {
-       id : uuidv4(),
-       name,
-       cpf,
-       date,
-       score : {}
-     }
-   })
+  const student = await this.prisma.studentsModel.findUnique({
+    where : {id}
+  })
+
+  return student
+ }
+
+ @Post('create')
+  async createStudent(@Body() body : CreateStudentBody){
+    
+    console.log(body)
+    const { name, cpf, date} = body
+
+    await this.prisma.studentsModel.create({
+
+      data : {
+        id : uuidv4(),
+        name,
+        cpf,
+        date,
+        score : {}
+      }
+  })
   }
 
   @Put('update/:id')
