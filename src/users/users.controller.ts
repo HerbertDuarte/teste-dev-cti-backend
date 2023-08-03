@@ -13,7 +13,7 @@ export class usersController {
     console.log(body)
     const {displayName, user, password} = body
 
-    await this.prisma.usersModel.create({
+    await this.prisma.user.create({
       data :{
         id : uuidv4(),
         displayName,
@@ -26,7 +26,7 @@ export class usersController {
 
   @Get("users/list")
   async listUsers(){
-    const users = await this.prisma.usersModel.findMany()
+    const users = await this.prisma.user.findMany()
 
     return users
   }

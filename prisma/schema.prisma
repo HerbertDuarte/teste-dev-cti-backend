@@ -7,17 +7,23 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model studentsModel {
+model Student{
   id    String   @id @unique
   name  String
   cpf   String   @unique
   date  DateTime
-  score Json
+  modules Module[] @relation("AlunoModulos")
 }
 
-model usersModel {
+model User {
   id          String @id @unique
   displayName String
   user        String
   password    String
+}
+
+model Module {
+  id   String @id @unique
+  name String
+  alunos Student[] @relation("AlunoModulos")
 }

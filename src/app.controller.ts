@@ -10,7 +10,7 @@ export class StudentsController {
  @Get('list')
  async listStudents(){
 
-  const students = await this.prisma.studentsModel.findMany()
+  const students = await this.prisma.student.findMany()
 
   return students
  }
@@ -18,7 +18,7 @@ export class StudentsController {
  @Get('list/:id')
  async listSingleStudent(@Param('id') id: any){
 
-  const student = await this.prisma.studentsModel.findUnique({
+  const student = await this.prisma.student.findUnique({
     where : {id}
   })
 
@@ -27,7 +27,7 @@ export class StudentsController {
 
  @Get('find')
   async searchUsers(@Query('name') name: string) {
-    const users = await this.prisma.studentsModel.findMany({
+    const users = await this.prisma.student.findMany({
       where: {
         name: {
           contains: name,
@@ -46,14 +46,14 @@ export class StudentsController {
     const { name, cpf, date} = body
 
     try {
-      await this.prisma.studentsModel.create({
+      await this.prisma.student.create({
 
         data : {
           id : uuidv4(),
           name,
           cpf,
           date,
-          score : {}
+          module : []
         }
     })
   } catch (error) {
@@ -69,7 +69,7 @@ export class StudentsController {
   async updateStudentData(@Param('id') id: any, @Body() body: any) {
     
     try {
-      const update = await this.prisma.studentsModel.update({
+      const update = await this.prisma.student.update({
         where: {id},
         data: body,
       });
@@ -85,7 +85,7 @@ export class StudentsController {
   async deleteStudentData(@Param('id') id: any) {
     
     try {
-      const deleteStudent = await this.prisma.studentsModel.delete({
+      const deleteStudent = await this.prisma.student.delete({
         where: {id},
       });
       return deleteStudent;

@@ -3,10 +3,13 @@ import { StudentsController} from './app.controller';
 import { PrismaService } from './database/prisma.service';
 import { usersModule } from './users/users.module';
 import { authModule } from './auth/auth.module';
+import { ModuloController } from './modulo/modulo.controller';
+import { ModuloService } from './modulo/modulo.service';
+import { ModuloModule } from './modulo/modulo.module';
 
 @Module({
-  imports: [usersModule, authModule],
-  controllers: [StudentsController],
-  providers: [PrismaService],
+  imports: [usersModule, authModule, ModuloModule],
+  controllers: [StudentsController, ModuloController],
+  providers: [PrismaService, ModuloService],
 })
 export class AppModule {}
