@@ -7,7 +7,7 @@ constructor(private prisma : PrismaService){}
 
   async findByUser(userName) {
 
-    const foundUser = await this.prisma.usersModel.findFirst({
+    const foundUser = await this.prisma.user.findFirst({
       where: {user : userName},
       select : { id: true, displayName : true, user: true, password: true  }
       })

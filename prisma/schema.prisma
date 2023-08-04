@@ -7,12 +7,19 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Student{
-  id    String   @id @unique
-  name  String
-  cpf   String   @unique
-  date  DateTime
-  modules Module[] @relation("AlunoModulos")
+model Student {
+  id      String   @id @unique
+  name    String
+  cpf     String   @unique
+  date    DateTime
+  modules Module[]
+}
+
+model Module {
+  id         String   @id @unique
+  name       String
+  id_student String?
+  students   Student? @relation(fields: [id_student], references: [id])
 }
 
 model User {
@@ -20,10 +27,4 @@ model User {
   displayName String
   user        String
   password    String
-}
-
-model Module {
-  id   String @id @unique
-  name String
-  alunos Student[] @relation("AlunoModulos")
 }

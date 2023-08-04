@@ -2,7 +2,7 @@ import { IsNotEmpty } from "class-validator"
 
 export class CreateStudentBody {
 
-@IsNotEmpty()
+  @IsNotEmpty()
   name : string;
 
   @IsNotEmpty()
@@ -11,4 +11,5 @@ export class CreateStudentBody {
   @IsNotEmpty()
   date : Date;
 
+  module : string[]
 }

@@ -12,7 +12,7 @@ export class AuthController {
   async userLogin(@Body() body: UserBody) {
 
     const {user : userName, password} = body
-    const foundUser = this.prisma.usersModel.findFirst({
+    const foundUser = this.prisma.user.findFirst({
       where : {user : userName },
       select : { id: true, user: true, password: true, displayName : true  }
     })
