@@ -20,7 +20,10 @@ export class StudentsController {
  async listSingleStudent(@Param('id') id: any){
 
   const student = await this.prisma.student.findUnique({
-    where : {id}
+    where : {id},
+    include : {
+      StudentModule : true
+    }
   })
 
   return student
@@ -35,6 +38,9 @@ export class StudentsController {
           mode : 'insensitive'
         },
       },
+      include : {
+        StudentModule : true
+      }
     });
 
   return users;

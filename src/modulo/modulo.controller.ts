@@ -3,13 +3,17 @@ import { PrismaService } from 'src/database/prisma.service';
 import { CreateModuleBody } from 'src/dtos/create-module-body';
 import { v4 as uuidv4 } from 'uuid';
 
-@Controller('modulo')
+@Controller('modules')
 export class ModuloController {
   constructor(private prisma : PrismaService){}
 
   @Get('list')
   async ListModules(){
-    const modulos = await this.prisma.module.findMany()
+    const modulos = await this.prisma.module.findMany({
+      include : {
+        StudentModule : true
+      }
+    })
 
     return modulos
   }
@@ -18,7 +22,12 @@ export class ModuloController {
   async listSingleModule(@Param('id') id : string){
 
     try {
-      const module = await this.prisma.module.findUnique({where : {id}})
+      const module = await this.prisma.module.findUnique({
+        where : {id},
+        include : {
+          StudentModule : true
+        }
+      })
       return module
     } catch (error) {
       return error.message
@@ -57,11 +66,36 @@ export class ModuloController {
     }
   }
 
-  @Put('register/student/:id')
-  async registerStudent(@Param('id') id : string){
+  @Post('register/student/')
+  async registerStudent(@Body() body : any){
 
-    
+    const {id_module, id_student} = body
 
+    try {
+      const moduleStudent = await this.prisma.studentModule.create({
+        data: {
+          id_module,
+          id_student
+        },
+      });
+      return moduleStudent
+    } catch (error) {
+      console.error('Erro ao adicionar aluno:', error);
+      return error
+
+    }
   }
+
+  @Get('students/list')
+  async findAllConnections(){
+    const allConnections = await this.prisma.studentModule.findMany()
+
+    return allConnections
+  }
+
+  //  @Delete('delete')
+  //  async deleteAll(){
+  //    return await this.prisma.studentModule.deleteMany()
+  //  }
 
 }

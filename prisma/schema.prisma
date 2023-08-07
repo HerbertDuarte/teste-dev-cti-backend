@@ -8,18 +8,28 @@ datasource db {
 }
 
 model Student {
-  id      String   @id @unique
-  name    String
-  cpf     String   @unique
-  date    DateTime
-  modules Module[]
+  id            String          @id @unique
+  name          String
+  cpf           String          @unique
+  date          DateTime
+  StudentModule StudentModule[]
 }
 
 model Module {
-  id         String   @id @unique
-  name       String
-  id_student String?
-  students   Student? @relation(fields: [id_student], references: [id])
+  id            String          @id @unique
+  name          String
+  score         Json[]
+  StudentModule StudentModule[]
+}
+
+model StudentModule {
+  id String @id @default(uuid())
+
+  id_module String
+  module    Module @relation(fields: [id_module], references: [id])
+
+  id_student String
+  student    Student @relation(fields: [id_student], references: [id])
 }
 
 model User {
