@@ -25,11 +25,11 @@ model Module {
 model StudentModule {
   id String @id @default(uuid())
 
-  id_module String
-  module    Module @relation(fields: [id_module], references: [id])
+  id_module String?
+  module    Module? @relation(fields: [id_module], references: [id])
 
-  id_student String
-  student    Student @relation(fields: [id_student], references: [id])
+  id_student String?
+  student    Student? @relation(fields: [id_student], references: [id])
 }
 
 model User {

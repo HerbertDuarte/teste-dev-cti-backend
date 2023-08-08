@@ -11,7 +11,11 @@ export class ModuloController {
   async ListModules(){
     const modulos = await this.prisma.module.findMany({
       include : {
-        StudentModule : true
+        StudentModule : {
+          select :{
+            student : true
+          }
+        }
       }
     })
 
@@ -25,7 +29,11 @@ export class ModuloController {
       const module = await this.prisma.module.findUnique({
         where : {id},
         include : {
-          StudentModule : true
+          StudentModule : {
+            select :{
+              student : true
+            }
+          }
         }
       })
       return module
@@ -66,6 +74,8 @@ export class ModuloController {
     }
   }
 
+  // GESTÃO DE ESTUDANTES EM CADA MÓDULO
+
   @Post('register/student/')
   async registerStudent(@Body() body : any){
 
@@ -92,10 +102,4 @@ export class ModuloController {
 
     return allConnections
   }
-
-  //  @Delete('delete')
-  //  async deleteAll(){
-  //    return await this.prisma.studentModule.deleteMany()
-  //  }
-
 }

@@ -10,8 +10,15 @@ export class StudentsController {
 
  @Get('list')
  async listStudents(){
-
-  const students = await this.prisma.student.findMany()
+  const students = await this.prisma.student.findMany({
+    include : {
+      StudentModule : {
+        select : {
+          module : true
+        }
+      }
+    }
+  })
 
   return students
  }
@@ -89,6 +96,12 @@ export class StudentsController {
 
   @Delete('delete/:id')
   async deleteStudentData(@Param('id') id: any) {
+
+    await this.prisma.studentModule.deleteMany({
+      where : {
+        id_student : id
+      }
+    })
     
     try {
       const deleteStudent = await this.prisma.student.delete({
