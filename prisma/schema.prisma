@@ -18,7 +18,6 @@ model Student {
 model Module {
   id            String          @id @unique
   name          String
-  score         Json[]
   StudentModule StudentModule[]
 }
 
@@ -30,6 +29,8 @@ model StudentModule {
 
   id_student String?
   student    Student? @relation(fields: [id_student], references: [id])
+
+  score Float[]
 }
 
 model User {

@@ -102,4 +102,21 @@ export class ModuloController {
 
     return allConnections
   }
+
+  @Post('delete/student/')
+  async deleteModuleStudent(@Body() body){
+    const {id_module, id_student} = body
+
+    try {
+      await this.prisma.studentModule.deleteMany({
+        where: {
+          id_module,
+          id_student
+        }
+      })
+      return 'Aluno removido'
+    } catch (error) {
+      return error
+    }
+  }
 }

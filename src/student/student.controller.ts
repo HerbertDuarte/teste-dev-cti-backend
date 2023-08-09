@@ -29,7 +29,11 @@ export class StudentsController {
   const student = await this.prisma.student.findUnique({
     where : {id},
     include : {
-      StudentModule : true
+      StudentModule : {
+        select :{
+          module: true
+        }
+      }
     }
   })
 
