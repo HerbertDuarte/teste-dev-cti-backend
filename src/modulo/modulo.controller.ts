@@ -13,7 +13,8 @@ export class ModuloController {
       include : {
         StudentModule : {
           select :{
-            student : true
+            student : true,
+            id : true
           }
         }
       }
@@ -31,7 +32,8 @@ export class ModuloController {
         include : {
           StudentModule : {
             select :{
-              student : true
+              student : true,
+              id : true
             }
           }
         }
@@ -119,4 +121,33 @@ export class ModuloController {
       return error
     }
   }
+  
+  @Get('score/:id')
+  async showScore(@Param('id') id : string){
+
+    const data = await this.prisma.studentModule.findUnique({
+      where : {id},
+      select : {
+        score : true,
+        student : true,
+        module : true        
+      }
+    })
+
+
+    if(!Array.isArray(data.score) || data.score.length === 0){
+      return {
+        ...data,
+        media : undefined
+      }
+    }
+    const score = data.score
+    const sum = score.reduce(((accumulator,score) => accumulator + score), 0)
+    const media = sum / score.length
+
+    return {
+      ...data,
+        media
+    }
+  } 
 }

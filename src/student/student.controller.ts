@@ -31,7 +31,8 @@ export class StudentsController {
     include : {
       StudentModule : {
         select :{
-          module: true
+          module: true,
+          id : true
         }
       }
     }
