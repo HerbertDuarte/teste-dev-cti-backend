@@ -105,8 +105,24 @@ export class ModuloController {
     return allConnections
   }
 
+  @Get('student/list/:id')
+  async findSingleConnections(@Param('id') id :string){
+    try
+    {const connection = await this.prisma.studentModule.findUnique({
+      where : {id},
+      include :{
+        student: true,
+        module : true
+      }})
+      return connection
+     
+    }catch(error){
+      return (error.message)
+    }
+  }
+
   @Post('delete/student/')
-  async deleteModuleStudent(@Body() body){
+  async deleteModuleStudent(@Body() body: any){
     const {id_module, id_student} = body
 
     try {
@@ -149,5 +165,23 @@ export class ModuloController {
       ...data,
         media
     }
-  } 
+  }
+
+  @Put('update/score/:id')
+  async updateScore(@Param('id') id : string, @Body() body : any){
+
+    const {id_module, id_student, score} = body
+    try{
+      await this.prisma.studentModule.update({
+      where: {id},
+      data : {id_module, id_student, score}
+    })
+
+    return 'Pontuação atualizada com sucesso!'
+
+    }catch(error){
+      console.log(error)
+      return 'ERRO : ' + error.message
+    }
+  }
 }
