@@ -78,26 +78,6 @@ export class ModuloController {
 
   // GESTÃO DE ESTUDANTES EM CADA MÓDULO
 
-  @Post('register/student/')
-  async registerStudent(@Body() body : any){
-
-    const {id_module, id_student} = body
-
-    try {
-      const moduleStudent = await this.prisma.studentModule.create({
-        data: {
-          id_module,
-          id_student
-        },
-      });
-      return moduleStudent
-    } catch (error) {
-      console.error('Erro ao adicionar aluno:', error);
-      return error
-
-    }
-  }
-
   @Get('students/list')
   async findAllConnections(){
     const allConnections = await this.prisma.studentModule.findMany()
@@ -121,6 +101,26 @@ export class ModuloController {
     }
   }
 
+  @Post('register/student/')
+  async registerStudent(@Body() body : any){
+
+    const {id_module, id_student} = body
+
+    try {
+      const moduleStudent = await this.prisma.studentModule.create({
+        data: {
+          id_module,
+          id_student
+        },
+      });
+      return moduleStudent
+    } catch (error) {
+      console.error('Erro ao adicionar aluno:', error);
+      return error
+
+    }
+  }
+
   @Post('delete/student/')
   async deleteModuleStudent(@Body() body: any){
     const {id_module, id_student} = body
@@ -141,17 +141,17 @@ export class ModuloController {
   @Get('score/:id')
   async showScore(@Param('id') id : string){
 
-    const data = await this.prisma.studentModule.findUnique({
+    const data = await this.prisma.studentModule.findFirst({
       where : {id},
       select : {
-        score : true,
+        score: true,
         student : true,
         module : true        
       }
     })
+    console.log(data)
 
-
-    if(!Array.isArray(data.score) || data.score.length === 0){
+    if(!Array.isArray(data.score) || data.score.length === 0 || !data.score){
       return {
         ...data,
         media : undefined
