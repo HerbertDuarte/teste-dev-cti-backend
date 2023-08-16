@@ -1,4 +1,5 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from 'src/auth/jwt.auth.guards';
 import { PrismaService } from 'src/database/prisma.service';
 import { CreateModuleBody } from 'src/dtos/create-module-body';
 import { v4 as uuidv4 } from 'uuid';
@@ -7,6 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
 export class ModuloController {
   constructor(private prisma : PrismaService){}
 
+  @UseGuards(JwtAuthGuard)
   @Get('list')
   async ListModules(){
     const modulos = await this.prisma.module.findMany({
@@ -23,21 +25,42 @@ export class ModuloController {
     return modulos
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get('list/:id')
   async listSingleModule(@Param('id') id : string){
 
     try {
-      const module = await this.prisma.module.findUnique({
+      const data = await this.prisma.module.findUnique({
         where : {id},
         include : {
           StudentModule : {
             select :{
               student : true,
-              id : true
+              id : true,
+              score: true
             }
           }
         }
       })
+
+      const module = data.StudentModule.map(element =>{
+        if(!Array.isArray(element.score) || element.score.length === 0 || !element.score){
+          return {
+            ...element,
+            media : undefined
+          }
+        }
+        const score = element.score
+        const sum = score.reduce(((accumulator,score) => accumulator + score), 0)
+        const media = sum / score.length
+
+        return {
+          ...element,
+            media
+        }
+      })
+      
+      
       return module
     } catch (error) {
       return error.message
@@ -45,6 +68,7 @@ export class ModuloController {
 
   }
 
+  @UseGuards(JwtAuthGuard)
   @Post('create')
   async createModulo(@Body() body : CreateModuleBody){
     const {name} = body
@@ -62,6 +86,7 @@ export class ModuloController {
     catch (error) {console.log('erro: ' + error.message)}
   }
   
+  @UseGuards(JwtAuthGuard)
   @Delete('delete/:id')
   async deleteModulo(@Param('id') id: string )  {
     
@@ -78,6 +103,7 @@ export class ModuloController {
 
   // GESTÃO DE ESTUDANTES EM CADA MÓDULO
 
+  @UseGuards(JwtAuthGuard)
   @Get('students/list')
   async findAllConnections(){
     const allConnections = await this.prisma.studentModule.findMany()
@@ -101,6 +127,7 @@ export class ModuloController {
     }
   }
 
+  @UseGuards(JwtAuthGuard)
   @Post('register/student/')
   async registerStudent(@Body() body : any){
 
@@ -121,6 +148,7 @@ export class ModuloController {
     }
   }
 
+  @UseGuards(JwtAuthGuard)
   @Post('delete/student/')
   async deleteModuleStudent(@Body() body: any){
     const {id_module, id_student} = body
@@ -138,6 +166,7 @@ export class ModuloController {
     }
   }
   
+  @UseGuards(JwtAuthGuard)
   @Get('score/:id')
   async showScore(@Param('id') id : string){
 
@@ -167,6 +196,7 @@ export class ModuloController {
     }
   }
 
+  @UseGuards(JwtAuthGuard)
   @Put('update/score/:id')
   async updateScore(@Param('id') id : string, @Body() body : any){
 

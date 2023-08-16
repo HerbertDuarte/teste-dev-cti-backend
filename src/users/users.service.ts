@@ -13,7 +13,7 @@ constructor(private prisma : PrismaService){}
       })
   
    if(!foundUser){
-    return {error : 'User not found!'}
+    return undefined
    }
 
    return foundUser

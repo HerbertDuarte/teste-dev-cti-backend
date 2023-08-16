@@ -1,13 +1,15 @@
-import { Controller, Get, Post, Body, Put, Param, Delete, Query,  HttpException, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Body, Put, Param, Delete, Query,  HttpException, HttpStatus, UseGuards } from '@nestjs/common';
 import { PrismaService } from 'src/database/prisma.service';
 import { v4 as uuidv4 } from 'uuid';
 import { CreateStudentBody } from 'src/dtos/create-student-body';
+import { JwtAuthGuard } from 'src/auth/jwt.auth.guards';
 
 
 @Controller('students')
 export class StudentsController {
   constructor(private prisma: PrismaService) {}
 
+@UseGuards(JwtAuthGuard)
  @Get('list')
  async listStudents(){
   const students = await this.prisma.student.findMany({
@@ -23,7 +25,7 @@ export class StudentsController {
 
   return students
  }
-
+ @UseGuards(JwtAuthGuard)
  @Get('list/:id')
  async listSingleStudent(@Param('id') id: any){
 
@@ -42,7 +44,7 @@ export class StudentsController {
 
   return student
  }
-
+ @UseGuards(JwtAuthGuard)
  @Get('find')
   async searchUsers(@Query('name') name: string) {
     const users = await this.prisma.student.findMany({
@@ -59,7 +61,7 @@ export class StudentsController {
 
   return users;
   }
-
+  @UseGuards(JwtAuthGuard)
  @Post('create')
   async createStudent(@Body() body : CreateStudentBody){
     
@@ -84,7 +86,7 @@ export class StudentsController {
   }
     
   }
-
+  @UseGuards(JwtAuthGuard)
   @Put('update/:id')
   async updateStudentData(@Param('id') id: any, @Body() body: any) {
     
@@ -100,7 +102,7 @@ export class StudentsController {
 
     }
   }
-
+  @UseGuards(JwtAuthGuard)
   @Delete('delete/:id')
   async deleteStudentData(@Param('id') id: any) {
 
