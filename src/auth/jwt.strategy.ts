@@ -4,7 +4,7 @@ import { ExtractJwt } from "passport-jwt";
 import { Strategy } from "passport-local";
 import { jwtConstants } from "./constants";
 
-
+// CÓDIGO COPIADO DA DOCUMENTAÇÃO DO NEST/SECURITY/AUTHENTICATION
 @Injectable()
 
 export class JwtStrategy extends PassportStrategy(Strategy){

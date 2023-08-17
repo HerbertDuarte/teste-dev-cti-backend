@@ -6,11 +6,13 @@ import { LocalStrategy } from './local.strategy';
 import { PrismaService } from 'src/database/prisma.service';
 import { JwtModule } from '@nestjs/jwt';
 import { jwtConstants } from './constants';
+import { tokenModule } from 'src/token/token.module';
 
 @Module({
   imports: [
     usersModule, 
-    PassportModule, 
+    PassportModule,
+    tokenModule,
     JwtModule.register({
       secret : jwtConstants.secret,
       signOptions : {expiresIn: '60s'}
