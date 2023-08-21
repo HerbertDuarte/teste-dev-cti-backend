@@ -28,7 +28,7 @@ export class usersController {
   //   return 'user created successfully!'
   // }
   
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @Get("users/list")
   async listUsers(){
     const users = await this.prisma.user.findMany()

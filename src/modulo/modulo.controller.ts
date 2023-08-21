@@ -1,14 +1,14 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/jwt.auth.guards';
 import { PrismaService } from 'src/database/prisma.service';
-import { CreateModuleBody } from 'src/dtos/create-module-body';
+import { CreateModuleBody, StudentModuleBody } from 'src/dtos/create-module-body';
 import { v4 as uuidv4 } from 'uuid';
 
 @Controller('modules')
 export class ModuloController {
   constructor(private prisma : PrismaService){}
 
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @Get('list')
   async ListModules(){
     const modulos = await this.prisma.module.findMany({
@@ -25,7 +25,7 @@ export class ModuloController {
     return modulos
   }
 
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @Get('list/:id')
   async listSingleModule(@Param('id') id : string){
 
@@ -37,9 +37,10 @@ export class ModuloController {
             select :{
               student : true,
               id : true,
-              score: true
+              score: true,
+              module : true
             }
-          }
+          },
         }
       })
 
@@ -68,7 +69,7 @@ export class ModuloController {
 
   }
 
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @Post('create')
   async createModulo(@Body() body : CreateModuleBody){
     const {name} = body
@@ -86,7 +87,7 @@ export class ModuloController {
     catch (error) {console.log('erro: ' + error.message)}
   }
   
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @Delete('delete/:id')
   async deleteModulo(@Param('id') id: string )  {
     
@@ -103,7 +104,7 @@ export class ModuloController {
 
   // GESTÃO DE ESTUDANTES EM CADA MÓDULO
 
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @Get('students/list')
   async findAllConnections(){
     const allConnections = await this.prisma.studentModule.findMany()
@@ -127,9 +128,9 @@ export class ModuloController {
     }
   }
 
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @Post('register/student/')
-  async registerStudent(@Body() body : any){
+  async registerStudent(@Body() body : StudentModuleBody){
 
     const {id_module, id_student} = body
 
@@ -148,9 +149,9 @@ export class ModuloController {
     }
   }
 
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @Post('delete/student/')
-  async deleteModuleStudent(@Body() body: any){
+  async deleteModuleStudent(@Body() body: StudentModuleBody){
     const {id_module, id_student} = body
 
     try {
@@ -166,7 +167,7 @@ export class ModuloController {
     }
   }
   
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @Get('score/:id')
   async showScore(@Param('id') id : string){
 
@@ -196,9 +197,9 @@ export class ModuloController {
     }
   }
 
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @Put('update/score/:id')
-  async updateScore(@Param('id') id : string, @Body() body : any){
+  async updateScore(@Param('id') id : string, @Body() body : StudentModuleBody){
 
     const {id_module, id_student, score} = body
     try{

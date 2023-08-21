@@ -25,9 +25,9 @@ export class StudentsController {
 
   return students
  }
- @UseGuards(JwtAuthGuard)
+//  @UseGuards(JwtAuthGuard)
  @Get('list/:id')
- async listSingleStudent(@Param('id') id: any){
+ async listSingleStudent(@Param('id') id: string){
 
   const student = await this.prisma.student.findUnique({
     where : {id},
@@ -44,7 +44,7 @@ export class StudentsController {
 
   return student
  }
- @UseGuards(JwtAuthGuard)
+//  @UseGuards(JwtAuthGuard)
  @Get('find')
   async searchUsers(@Query('name') name: string) {
     const users = await this.prisma.student.findMany({
@@ -61,7 +61,7 @@ export class StudentsController {
 
   return users;
   }
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
  @Post('create')
   async createStudent(@Body() body : CreateStudentBody){
     
@@ -86,9 +86,9 @@ export class StudentsController {
   }
     
   }
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @Put('update/:id')
-  async updateStudentData(@Param('id') id: any, @Body() body: any) {
+  async updateStudentData(@Param('id') id: string, @Body() body: CreateStudentBody) {
     
     try {
       const update = await this.prisma.student.update({
@@ -102,9 +102,9 @@ export class StudentsController {
 
     }
   }
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @Delete('delete/:id')
-  async deleteStudentData(@Param('id') id: any) {
+  async deleteStudentData(@Param('id') id: string) {
 
     await this.prisma.studentModule.deleteMany({
       where : {
