@@ -28,6 +28,7 @@ export class AuthService {
 
   async login(data :any){
 
+    try {
       const {user, id} = data
       const payload = {user, sub : id}
       
@@ -37,6 +38,11 @@ export class AuthService {
       return {
         access_token : token
       }
+    } catch (error) {
+      console.log('erro no auth service')
+      return(error)
+    }
+      
 
   }
 }
