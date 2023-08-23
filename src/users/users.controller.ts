@@ -5,7 +5,6 @@ import { v4 as uuidv4 } from 'uuid';
 import * as bcrypt from 'bcrypt'
 import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from 'src/auth/auth.service';
-import { JwtAuthGuard } from 'src/auth/jwt.auth.guards';
 
 @Controller('')
 export class usersController {

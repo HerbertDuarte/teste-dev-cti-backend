@@ -43,9 +43,10 @@ export class ModuloController {
           },
         }
       })
+      if(data.StudentModule.length > 0){
 
-      const module = data.StudentModule.map(element =>{
-        if(!Array.isArray(element.score) || element.score.length === 0 || !element.score){
+        const modulo = data.StudentModule.map(element =>{
+          if(!Array.isArray(element.score) || element.score.length === 0 || !element.score){
           return {
             ...element,
             media : undefined
@@ -54,15 +55,18 @@ export class ModuloController {
         const score = element.score
         const sum = score.reduce(((accumulator,score) => accumulator + score), 0)
         const media = sum / score.length
-
+        
         return {
           ...element,
-            media
+          media
         }
       })
       
       
-      return module
+      return modulo
+    }else{
+      return data
+    }
     } catch (error) {
       return error.message
     }
@@ -90,13 +94,17 @@ export class ModuloController {
   @UseGuards(JwtAuthGuard)
   @Delete('delete/:id')
   async deleteModulo(@Param('id') id: string )  {
+
+    await this.prisma.studentModule.deleteMany({
+      where : {
+        id_module : id
+      }
+    })
     
     try {
       await this.prisma.module.delete({
         where :{id},
       })
-
-      return 'Deleted module'
     } catch (error) {
       return error.message
     }
