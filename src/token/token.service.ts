@@ -32,7 +32,7 @@ export class tokenService {
       return res
 
     } else {
-      // console.log('token inexistente')
+      console.log('token inexistente')
 
       const res = await this.prisma.token.create({
         data: {
@@ -46,7 +46,6 @@ export class tokenService {
 
   async refreshToken(oldToken: string) {
 
-    console.log('Passou pelo service')
 
     const tokenFound = await this.prisma.token.findFirst({
       where: {
@@ -54,21 +53,15 @@ export class tokenService {
       }
     })
 
-    console.log('Token encontrado : ', tokenFound)
-
     if(tokenFound){
       const {username} = tokenFound
       
       const user = await this.userService.findByUser(username)
       if(user){
-        console.log('Achou um user : ', user)
         const res = await this.authService.login(user)
 
         return res
-      }else{
-        console.log('não achou user')
-      }
-    }
+    }}
 
 
     if(!tokenFound){

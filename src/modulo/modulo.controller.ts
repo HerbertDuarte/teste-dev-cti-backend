@@ -77,7 +77,7 @@ export class ModuloController {
   @Post('create')
   async createModulo(@Body() body : CreateModuleBody){
     const {name} = body
-    console.log(body)
+    // console.log(body)
     
     try {
       await this.prisma.module.create({
@@ -187,7 +187,7 @@ export class ModuloController {
         module : true        
       }
     })
-    console.log(data)
+    // console.log(data)
 
     if(!Array.isArray(data.score) || data.score.length === 0 || !data.score){
       return {
