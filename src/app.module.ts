@@ -6,10 +6,12 @@ import { ModuloService } from './modulo/modulo.service';
 import { ModuloModule } from './modulo/modulo.module';
 import { StudentModule } from './student/student.module';
 import { AuthModule } from './auth/auth.module';
+import { PingService } from './ping/ping.service';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
-  imports: [ModuloModule, StudentModule, AuthModule],
+  imports: [ModuloModule, StudentModule, AuthModule, ScheduleModule.forRoot()],
   controllers: [StudentsController, ModuloController],
-  providers: [PrismaService, ModuloService],
+  providers: [PrismaService, ModuloService, PingService, PingService],
 })
 export class AppModule {}
