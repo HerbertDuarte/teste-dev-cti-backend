@@ -8,7 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
 export class ModuloController {
   constructor(private prisma : PrismaService){}
 
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @Get('list')
   async ListModules(){
     const modulos = await this.prisma.module.findMany({
@@ -107,6 +107,24 @@ export class ModuloController {
       })
     } catch (error) {
       return error.message
+    }
+  }
+
+  // @UseGuards(JwtAuthGuard)
+  @Put('update/:id')
+  async updateModule(@Param('id') id: string, @Body() body)  {
+    const {name} = body
+    
+    try {
+      await this.prisma.module.update({
+        where: {id},
+        data:{
+          name
+        }
+      })
+      return 'Módulo atualizado com sucesso'
+    } catch (error) {
+      throw new Error('Erro ao atualizar o módulo')
     }
   }
 
