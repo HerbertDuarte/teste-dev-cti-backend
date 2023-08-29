@@ -8,7 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
 export class ModuloController {
   constructor(private prisma : PrismaService){}
 
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Get('list')
   async ListModules(){
     const modulos = await this.prisma.module.findMany({
@@ -110,7 +110,7 @@ export class ModuloController {
     }
   }
 
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Put('update/:id')
   async updateModule(@Param('id') id: string, @Body() body)  {
     const {name} = body

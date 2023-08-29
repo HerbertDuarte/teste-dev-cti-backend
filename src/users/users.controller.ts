@@ -10,24 +10,23 @@ import { AuthService } from 'src/auth/auth.service';
 export class usersController {
   constructor(private prisma: PrismaService, private auth : AuthService) {}
 
-  @Post('user/create')
-  async findUser(@Body() body : CreateUserBody){
+  // @Post('user/create')
+  // async findUser(@Body() body : CreateUserBody){
 
-    // console.log(body)
-    const {displayName, user, password} = body
+  //   // console.log(body)
+  //   const {displayName, user, password} = body
 
-    await this.prisma.user.create({
-      data :{
-        id : uuidv4(),
-        displayName,
-        user,
-        password : await bcrypt.hashSync(password, 10)
-      }
-    })
-    return 'user created successfully!'
-  }
+  //   await this.prisma.user.create({
+  //     data :{
+  //       id : uuidv4(),
+  //       displayName,
+  //       user,
+  //       password : await bcrypt.hashSync(password, 10)
+  //     }
+  //   })
+  //   return 'user created successfully!'
+  // }
   
-  // @UseGuards(JwtAuthGuard)
   @Get("users/list")
   async listUsers(){
     const users = await this.prisma.user.findMany()
