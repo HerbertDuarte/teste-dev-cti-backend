@@ -3,7 +3,8 @@ import { PrismaService } from 'src/database/prisma.service';
 import { v4 as uuidv4 } from 'uuid';
 import { CreateStudentBody } from 'src/dtos/create-student-body';
 import { JwtAuthGuard } from 'src/auth/jwt.auth.guards';
-
+import { Roles } from 'src/auth/roles.decorator';
+import { RolesGuard } from 'src/auth/roles.guard';
 
 @Controller('students')
 export class StudentsController {
@@ -25,8 +26,9 @@ export class StudentsController {
 
   return students
  }
- @UseGuards(JwtAuthGuard)
+
  @Get('list/:id')
+ @UseGuards(JwtAuthGuard)
  async listSingleStudent(@Param('id') id: string){
 
   const student = await this.prisma.student.findUnique({
@@ -61,8 +63,10 @@ export class StudentsController {
 
   return users;
   }
-  @UseGuards(JwtAuthGuard)
+
  @Post('create')
+ @Roles('admin')
+ @UseGuards(JwtAuthGuard, RolesGuard)
   async createStudent(@Body() body : CreateStudentBody){
     
     const { name, cpf, date} = body

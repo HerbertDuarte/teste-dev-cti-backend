@@ -10,22 +10,30 @@ import { AuthService } from 'src/auth/auth.service';
 export class usersController {
   constructor(private prisma: PrismaService, private auth : AuthService) {}
 
-  // @Post('user/create')
-  // async findUser(@Body() body : CreateUserBody){
+  @Post('user/create')
+  async findUser(@Body() body : CreateUserBody){
 
-  //   // console.log(body)
-  //   const {displayName, user, password} = body
+    // console.log(body)
+    const {displayName, user, password} = body
+    const {rolecode} = body
 
-  //   await this.prisma.user.create({
-  //     data :{
-  //       id : uuidv4(),
-  //       displayName,
-  //       user,
-  //       password : await bcrypt.hashSync(password, 10)
-  //     }
-  //   })
-  //   return 'user created successfully!'
-  // }
+    let role = 'user'
+
+    if(rolecode == process.env.ROLE_CODE){
+      role = 'admin'
+    }
+ 
+    await this.prisma.user.create({
+      data :{
+        id : uuidv4(),
+        displayName,
+        user,
+        role,
+        password : await bcrypt.hashSync(password, 10)
+      }
+    })
+    return 'user created successfully!'
+  }
   
   @Get("users/list")
   async listUsers(){
