@@ -14,7 +14,5 @@ export class CreateUserBody {
   @IsNotEmpty()
   password : string;
 
-  // @IsNotEmpty()
-  // score : JSON |any;
-
+  rolecode : string
 }

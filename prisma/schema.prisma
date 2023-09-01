@@ -32,15 +32,17 @@ model StudentModule {
 
   score Float[]
 }
+
 model User {
   id          String @id @unique
   displayName String
   user        String @unique
+  role        String @default("user")
   password    String
 }
 
 model Token {
-  id String @id @unique @default(uuid())
-  hash String
-  username  String
+  id       String @id @unique @default(uuid())
+  hash     String
+  username String
 }
