@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Body, Request, UseGuards, Param } from '@nestjs/common';
+import { Controller, Post, Get, Body, Request, UseGuards, Param, Delete } from '@nestjs/common';
 import { PrismaService } from 'src/database/prisma.service';
 import { CreateUserBody } from 'src/dtos/create-user-body';
 import { v4 as uuidv4 } from 'uuid';
@@ -9,7 +9,7 @@ import { usersService } from './users.service';
 import { JwtAuthGuard } from 'src/auth/jwt.auth.guards';
 import { tokenService } from 'src/token/token.service';
 import { StudentService } from 'src/student/student.service';
-import { error } from 'console';
+
 
 @Controller('')
 export class usersController {
@@ -18,6 +18,11 @@ export class usersController {
   @Post('user/create')
   async createUser(@Body() body : CreateUserBody){
     this.userService.createUser(body)
+  }
+
+  @Delete('user/delete/:username')
+  async deleteUser(@Param('username') username : string){
+    await this.userService.deleteUser(username)
   }
   
   @Get("users/list")

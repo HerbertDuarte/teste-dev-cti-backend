@@ -32,13 +32,15 @@ export class StudentsController {
  }
 
  @Get('list/:id')
- @UseGuards(JwtAuthGuard)
+ @Roles(Role.ADMIN)
+ @UseGuards(JwtAuthGuard, RolesGuard)
  async listSingleStudent(@Param('id') id: string){
 
   return this.studentService.findStudent(id)
   
  }
- @UseGuards(JwtAuthGuard)
+ @UseGuards(JwtAuthGuard, RolesGuard)
+ @Roles(Role.ADMIN)
  @Get('find')
   async searchUsers(@Query('name') name: string) {
     const users = await this.prisma.student.findMany({
@@ -95,7 +97,8 @@ export class StudentsController {
   }
     
   }
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN)
   @Put('update/:id')
   async updateStudentData(@Param('id') id: string, @Body() body: CreateStudentBody) {
     
@@ -111,7 +114,8 @@ export class StudentsController {
 
     }
   }
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN)
   @Delete('delete/:id')
   async deleteStudentData(@Param('id') id: string) {
 
@@ -120,6 +124,12 @@ export class StudentsController {
         id_student : id
       }
     })
+
+    const student = await this.prisma.student.findUnique({
+      where: {id}
+    })
+
+    await this.userService.deleteUser(student.username)
     
     try {
       const deleteStudent = await this.prisma.student.delete({

@@ -3,12 +3,16 @@ import { JwtAuthGuard } from 'src/auth/jwt.auth.guards';
 import { PrismaService } from 'src/database/prisma.service';
 import { CreateModuleBody, StudentModuleBody } from 'src/dtos/create-module-body';
 import { v4 as uuidv4 } from 'uuid';
+import { Roles } from 'src/auth/roles.decorator';
+import { RolesGuard } from 'src/auth/roles.guard';
+import { Role } from 'src/users/enum/user-roles-enum';
 
 @Controller('modules')
 export class ModuloController {
   constructor(private prisma : PrismaService){}
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN)
   @Get('list')
   async ListModules(){
     const modulos = await this.prisma.module.findMany({
@@ -25,7 +29,8 @@ export class ModuloController {
     return modulos
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN)
   @Get('list/:id')
   async listSingleModule(@Param('id') id : string){
 
@@ -73,7 +78,8 @@ export class ModuloController {
 
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN)
   @Post('create')
   async createModulo(@Body() body : CreateModuleBody){
     const {name} = body
@@ -91,7 +97,8 @@ export class ModuloController {
     catch (error) {console.log('erro: ' + error.message)}
   }
   
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN)
   @Delete('delete/:id')
   async deleteModulo(@Param('id') id: string )  {
 
@@ -110,7 +117,8 @@ export class ModuloController {
     }
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN)
   @Put('update/:id')
   async updateModule(@Param('id') id: string, @Body() body)  {
     const {name} = body
@@ -130,7 +138,8 @@ export class ModuloController {
 
   // GESTÃO DE ESTUDANTES EM CADA MÓDULO
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN)
   @Get('students/list')
   async findAllConnections(){
     const allConnections = await this.prisma.studentModule.findMany()
@@ -154,7 +163,8 @@ export class ModuloController {
     }
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN)
   @Post('register/student/')
   async registerStudent(@Body() body : StudentModuleBody){
 
@@ -175,7 +185,8 @@ export class ModuloController {
     }
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN)
   @Post('delete/student/')
   async deleteModuleStudent(@Body() body: StudentModuleBody){
     const {id_module, id_student} = body
@@ -193,7 +204,8 @@ export class ModuloController {
     }
   }
   
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN)
   @Get('score/:id')
   async showScore(@Param('id') id : string){
 
@@ -223,7 +235,8 @@ export class ModuloController {
     }
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN)
   @Put('update/score/:id')
   async updateScore(@Param('id') id : string, @Body() body : StudentModuleBody){
 

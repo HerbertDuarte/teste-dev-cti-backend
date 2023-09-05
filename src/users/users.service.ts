@@ -45,4 +45,13 @@ constructor(private prisma : PrismaService){}
     })
     return 'user created successfully!'
   }
+
+  async deleteUser(username:string) {
+  
+    const response = await this.prisma.user.delete({
+      where: {user : username}
+    })
+
+    return response
+  }
 }
