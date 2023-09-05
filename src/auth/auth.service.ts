@@ -29,17 +29,13 @@ export class AuthService {
   async login(data :any){
 
     try {
-      const {user, id} = data
-      const payload = {user, sub : id}
-      
+      const {user, id, role} = data
+      const payload = {user, sub : id , role}
       const token = this.jwtService.sign(payload)
-      await this.tokenService.save(token, user)
+      const res = await this.tokenService.save(token, user)
 
-      return {
-        access_token : token
-      }
+      return res
     } catch (error) {
-      console.log('erro no auth service')
       return(error)
     }
       

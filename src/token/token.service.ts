@@ -20,9 +20,8 @@ export class tokenService {
     })
 
     if (existingToken) {
-
       const res = await this.prisma.token.update({
-        where: { id: existingToken.id },
+        where: { username },
         data: {
           ...existingToken,
           hash
@@ -32,24 +31,21 @@ export class tokenService {
       return res
 
     } else {
-      console.log('token inexistente')
-
       const res = await this.prisma.token.create({
         data: {
           hash,
           username
         }
       })
-
+      return res
     }
   }
 
   async refreshToken(oldToken: string) {
 
-
-    const tokenFound = await this.prisma.token.findFirst({
+    const tokenFound = await this.prisma.token.findUnique({
       where: {
-        hash: oldToken
+        hash : oldToken
       }
     })
 
@@ -65,11 +61,28 @@ export class tokenService {
 
 
     if(!tokenFound){
-      console.log('token não encontrado')
       return new HttpException({
         errorMessage: 'Token inválido'
       }, HttpStatus.UNAUTHORIZED)
     }
 
+  }
+
+  async verifyTokenByUser(uname : string, hash : string){
+
+    try {
+      const res = await this.prisma.token.findUnique({
+        where: {hash}
+      })
+      if(res.username == uname){
+        return true
+      }
+      
+    } catch (error) {
+      console.log(error)
+      throw new HttpException({
+        errorMessage: 'Houve um erro de segurança ao fazer essa requisiçao.'
+      }, HttpStatus.UNAUTHORIZED)
+    }
   }
 }

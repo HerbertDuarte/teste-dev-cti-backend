@@ -2,8 +2,6 @@ import { IsNotEmpty } from "class-validator"
 
 
 export class CreateUserBody {
-  
-  id : any;
 
   @IsNotEmpty()
   displayName : string ;
@@ -14,5 +12,5 @@ export class CreateUserBody {
   @IsNotEmpty()
   password : string;
 
-  rolecode : string
+  rolecode? : string
 }

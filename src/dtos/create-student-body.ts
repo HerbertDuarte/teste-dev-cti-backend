@@ -6,6 +6,9 @@ export class CreateStudentBody {
   name : string;
 
   @IsNotEmpty()
+  username : string;
+
+  @IsNotEmpty()
   cpf : number | any;
 
   @IsNotEmpty()

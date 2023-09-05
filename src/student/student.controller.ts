@@ -5,13 +5,17 @@ import { CreateStudentBody } from 'src/dtos/create-student-body';
 import { JwtAuthGuard } from 'src/auth/jwt.auth.guards';
 import { Roles } from 'src/auth/roles.decorator';
 import { RolesGuard } from 'src/auth/roles.guard';
+import { Role } from 'src/users/enum/user-roles-enum';
+import { usersService } from 'src/users/users.service';
+import { StudentService } from './student.service';
 
 @Controller('students')
 export class StudentsController {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService, private userService : usersService, private studentService : StudentService) {}
 
-@UseGuards(JwtAuthGuard)
- @Get('list')
+  @Get('list')
+  @Roles(Role.ADMIN)
+  @UseGuards(JwtAuthGuard, RolesGuard)
  async listStudents(){
   const students = await this.prisma.student.findMany({
     include : {
@@ -31,20 +35,8 @@ export class StudentsController {
  @UseGuards(JwtAuthGuard)
  async listSingleStudent(@Param('id') id: string){
 
-  const student = await this.prisma.student.findUnique({
-    where : {id},
-    include : {
-      StudentModule : {
-        select :{
-          module: true,
-          id : true,
-          score : true
-        }
-      }
-    }
-  })
-
-  return student
+  return this.studentService.findStudent(id)
+  
  }
  @UseGuards(JwtAuthGuard)
  @Get('find')
@@ -65,25 +57,39 @@ export class StudentsController {
   }
 
  @Post('create')
- @Roles('admin')
+ @Roles(Role.ADMIN)
  @UseGuards(JwtAuthGuard, RolesGuard)
   async createStudent(@Body() body : CreateStudentBody){
     
-    const { name, cpf, date} = body
+    const { name, cpf, date, username} = body
+
+    const userBody = {
+      displayName : name,
+      user : username,
+      password : cpf,
+    }
 
     try {
-      await this.prisma.student.create({
 
+      
+      await this.prisma.student.create({
+        
         data:{
           id : uuidv4(),
           name,
           cpf,
           date,
+          username,
         }
-    })
-  } catch (error) {
+      })
+      await this.userService.createUser(userBody)
+
+    } catch (error) {
     if (error.code === 'P2002' && error.meta?.target?.includes('cpf')) {
       throw new HttpException('Esse CPF já foi registrado.', HttpStatus.BAD_REQUEST);
+    }
+    else if (error.code === 'P2002' && error.meta?.target?.includes('username')) {
+      throw new HttpException('Esse nome de usuário já foi registrado.', HttpStatus.BAD_REQUEST);
     }
     throw new HttpException('Internal Server Error', HttpStatus.INTERNAL_SERVER_ERROR);
   }
