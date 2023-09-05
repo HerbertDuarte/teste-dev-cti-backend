@@ -37,7 +37,7 @@ export class StudentService {
       }
     })
 
-    if(!Array.isArray(data.StudentModule) || data.StudentModule.length === 0 || !data.StudentModule){
+    if(data.StudentModule && (!Array.isArray(data.StudentModule) || data.StudentModule.length === 0 || !data.StudentModule)){
       return {
         ...data,
         media : undefined
