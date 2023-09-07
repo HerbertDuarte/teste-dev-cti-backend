@@ -15,9 +15,6 @@ constructor(private prisma : PrismaService){}
       select : { id: true, displayName : true, user: true, role: true }
       })
 
-      console.log('foundUser')
-      console.log(foundUser)
-
    if(!foundUser){
     return undefined
    }
