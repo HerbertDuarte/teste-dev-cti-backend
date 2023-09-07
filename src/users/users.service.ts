@@ -8,13 +8,16 @@ import * as bcrypt from 'bcrypt'
 export class usersService {;
 constructor(private prisma : PrismaService){}
 
-  async findByUser(userName : string) {
+  async findByUser(username : string) {
 
     const foundUser = await this.prisma.user.findFirst({
-      where: {user : userName},
+      where: {user : username},
       select : { id: true, displayName : true, user: true, role: true }
       })
-  
+
+      console.log('foundUser')
+      console.log(foundUser)
+
    if(!foundUser){
     return undefined
    }

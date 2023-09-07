@@ -31,9 +31,9 @@ export class StudentsController {
   return students
  }
 
+ @UseGuards(JwtAuthGuard, RolesGuard)
  @Get('list/:id')
  @Roles(Role.ADMIN)
- @UseGuards(JwtAuthGuard, RolesGuard)
  async listSingleStudent(@Param('id') id: string){
 
   return this.studentService.findStudent(id)

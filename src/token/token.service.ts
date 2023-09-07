@@ -43,16 +43,21 @@ export class tokenService {
 
   async refreshToken(oldToken: string) {
 
+    console.log(oldToken)
     const tokenFound = await this.prisma.token.findUnique({
       where: {
         hash : oldToken
       }
     })
 
+    console.log('tokenFound')
+    console.log(tokenFound)
+
     if(tokenFound){
       const {username} = tokenFound
       
       const user = await this.userService.findByUser(username)
+      console.log(user)
       if(user){
         const res = await this.authService.login(user)
 
