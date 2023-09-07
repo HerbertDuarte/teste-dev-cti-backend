@@ -13,15 +13,15 @@ export class tokenService {
     private authService : AuthService
   ) { }
 
-  async save(hash: string, username: string) {
+  async save(hash: string, username : string) {
 
     const existingToken = await this.prisma.token.findFirst({
-      where: { username }
+      where: { hash }
     })
 
     if (existingToken) {
       const res = await this.prisma.token.update({
-        where: { username },
+        where: { hash },
         data: {
           ...existingToken,
           hash
