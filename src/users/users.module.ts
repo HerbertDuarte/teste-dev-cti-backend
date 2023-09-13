@@ -4,7 +4,6 @@ import { PrismaService } from 'src/database/prisma.service';
 import { usersService } from './users.service';
 import { PassportModule } from '@nestjs/passport';
 import { AuthModule } from 'src/auth/auth.module';
-import { tokenService } from 'src/token/token.service';
 import { StudentService } from 'src/student/student.service';
 
 @Module({
@@ -14,7 +13,7 @@ import { StudentService } from 'src/student/student.service';
     PassportModule.register({ defaultStrategy: 'local' }),
   ],
   controllers: [usersController],
-  providers: [PrismaService, usersService, tokenService, StudentService],
+  providers: [PrismaService, usersService, StudentService],
   exports :[usersService]
 })
 export class usersModule {}

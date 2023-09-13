@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/database/prisma.service';
 
 @Injectable()
@@ -24,6 +24,10 @@ export class StudentService {
   }
 
   async findStudentByUsername (username : string) {
+
+    try {
+      
+    
     const data = await this.prisma.student.findUnique({
       where : {username},
       include : {
@@ -37,7 +41,8 @@ export class StudentService {
       }
     })
 
-    if(data.StudentModule && (!Array.isArray(data.StudentModule) || data.StudentModule.length === 0 || !data.StudentModule)){
+    
+    if(!data.StudentModule){
       return {
         ...data,
         media : undefined
@@ -60,5 +65,10 @@ export class StudentService {
     }
 
     return newData
+  } catch (error) {
+    console.log(error)
+    throw new HttpException("Usuário não encontrado", HttpStatus.UNAUTHORIZED)
+  }
+    
   }
 }

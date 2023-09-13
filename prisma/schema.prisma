@@ -41,9 +41,3 @@ model User {
   role        String
   password    String
 }
-
-model Token {
-  id       String @id @unique @default(uuid())
-  hash     String @unique
-  username String
-}
